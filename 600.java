@@ -56,5 +56,40 @@ To help with solving this problem in a timely manner, we provide the following h
 2. Consider simulating the deque as a way to efficiently determine which operations were performed on it. For example, as above, if the first element of the input is a 4, simulate a deque having the elements 1 through 4 pushed into it. Since you do not know whether each element was pushed to the front or the back, try pushing it on both sides and figuring out which side is correct later in the simulation.
 **/
 
+public static void main(String[] args){
+	Scanner sc = new Scanner(System.in);
+	String input = sc.nextLine();
+	String[] strs = strs.split(",");
+	int n = strs.length;
+	int[] nums = new int[n];
+	for(int i = 0; i < n; i++){
+		nums[i] = Integer.parseInt(strs[i]);
+	}
+	int[] order = new int[n];
+	for(int i = 0; i < n; i++){
+		order[nums[i]] = i;
+	}
+	Deque<Integer> deque = new LinkedList<>();
+	StringBuilder sb = new StringBuilder();
+	for(int i = 1, j = 0; j < n; j++){
+		for(; i <= a[j]; i++){
+			if(deque.isEmpty() || order[deque.peekLast()] > order[i]){
+				deque.offerLast(i);
+				sb.append("pushBack,");
+			}
+			else{
+				deque.offerFirst(i);
+				sb.append("pushFront,");
+			}
+		}
+		if(deque.isEmpty() || (deque.peekLast() != a[j])){
+			System.out.print("impossible");
+		}
+		deque.pollLast();
+	}
+	System.out.print(sb.toString().substring(0, sb.length() - 1));
+	return;
+}
+
 
 
