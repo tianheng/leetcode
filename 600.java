@@ -52,9 +52,19 @@ Output (some sequences are impossible):
 impossible
 
 To help with solving this problem in a timely manner, we provide the following hints that may help you work out one way of writing an efficient program to solve this problem:
-1. Note that if the first element of the input sequence is 4, then the 5th element of the output must be popBack (unless the output is impossible). The reason for this is that at least 4 pushes must be executed to get 4 into the deque, and the 4th push must be a pushBack so that 4 is ready to be popped from the back of the deque. More than 4 pushes could be executed, but elements 5 and above must be pushed to the front, and this could easily be done after 4 was popped instead of before. Since popBack is lexicographically smaller than pushFront, we prefer to execute popBack as early as possible.
-2. Consider simulating the deque as a way to efficiently determine which operations were performed on it. For example, as above, if the first element of the input is a 4, simulate a deque having the elements 1 through 4 pushed into it. Since you do not know whether each element was pushed to the front or the back, try pushing it on both sides and figuring out which side is correct later in the simulation.
+1. Note that if the first element of the input sequence is 4, then the 5th element of the output must be popBack (unless the output is impossible). The reason for this is that 
+at least 4 pushes must be executed to get 4 into the deque, and the 4th push must be a pushBack so that 4 is ready to be popped from the back of the deque. More than 4 pushes 
+could be executed, but elements 5 and above must be pushed to the front, and this could easily be done after 4 was popped instead of before. Since popBack is lexicographically 
+smaller than pushFront, we prefer to execute popBack as early as possible.
+2. Consider simulating the deque as a way to efficiently determine which operations were performed on it. For example, as above, if the first element of the input is a 4, 
+simulate a deque having the elements 1 through 4 pushed into it. Since you do not know whether each element was pushed to the front or the back, try pushing it on both sides 
+and figuring out which side is correct later in the simulation.
 **/
+
+//All of the number show in order (from 1 to n)
+//If a number x is shown, then all of the numbers before x should all been added to deque as well. For current number x, 
+//loop over all numbers smaller than or equal to x, if its order is before x, then push to back of queue; if its order is after x, then push to the front of queue.
+//If the last element of queue equals to current number, pop back the last element; else output "impossible" 
 
 public static void main(String[] args){
 	Scanner sc = new Scanner(System.in);
@@ -65,29 +75,30 @@ public static void main(String[] args){
 	for(int i = 0; i < n; i++){
 		nums[i] = Integer.parseInt(strs[i]);
 	}
-	int[] order = new int[n];
+	int[] order = new int[n + 1];
 	for(int i = 0; i < n; i++){
 		order[nums[i]] = i;
 	}
 	Deque<Integer> deque = new LinkedList<>();
-	StringBuilder sb = new StringBuilder();
+	StringBuilder output = new StringBuilder();
 	for(int i = 1, j = 0; j < n; j++){
-		for(; i <= a[j]; i++){
+		for(; i <= nums[j]; i++){
 			if(deque.isEmpty() || order[deque.peekLast()] > order[i]){
 				deque.offerLast(i);
-				sb.append("pushBack,");
+				output.append("pushBack,");
 			}
 			else{
 				deque.offerFirst(i);
-				sb.append("pushFront,");
+				output.append("pushFront,");
 			}
 		}
-		if(deque.isEmpty() || (deque.peekLast() != a[j])){
+		if(deque.isEmpty() || (deque.peekLast() != nums[j])){
 			System.out.print("impossible");
 		}
 		deque.pollLast();
+		output.append("popBack,");
 	}
-	System.out.print(sb.toString().substring(0, sb.length() - 1));
+	System.out.print(output.toString().substring(0, output.length() - 1));
 	return;
 }
 
