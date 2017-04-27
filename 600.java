@@ -71,33 +71,40 @@ public static void main(String[] args){
 	String input = sc.nextLine();
 	String[] strs = strs.split(",");
 	int n = strs.length;
-	int[] nums = new int[n];
+
+	TreeMap<Integer, Integer> tm = new TreeMap<>();
+
 	for(int i = 0; i < n; i++){
-		nums[i] = Integer.parseInt(strs[i]);
+		int val = Integer.parseInt(strs[i]);
+		tm.put(val, i);
 	}
-	int[] order = new int[n + 1];
-	for(int i = 0; i < n; i++){
-		order[nums[i]] = i;
-	}
+
+
 	Deque<Integer> deque = new LinkedList<>();
 	StringBuilder output = new StringBuilder();
-	for(int i = 1, j = 0; j < n; j++){
-		for(; i <= nums[j]; i++){
-			if(deque.isEmpty() || order[deque.peekLast()] > order[i]){
-				deque.offerLast(i);
+
+	Set set = tm.entrySet();
+	Iterator i = set.iterator();
+
+	int num = 1;
+	while(i.hasNext()){
+		Map.Entry me = (Map.Entry)i.next();
+		for(; num <= me.getKey(); num++){
+			if(deque.isEmpty() || tm.get(deque.peekLast()) > tm.get(num)){
+				deque.offerLast(num);
 				output.append("pushBack,");
-			}
-			else{
-				deque.offerFirst(i);
+			} else {
+				deque.offerFirst(num);
 				output.append("pushFront,");
 			}
 		}
-		if(deque.isEmpty() || (deque.peekLast() != nums[j])){
+		if(deque.isEmpty() || (deque.peekLast() != me.getKey())){
 			System.out.print("impossible");
 		}
 		deque.pollLast();
 		output.append("popBack,");
 	}
+
 	System.out.print(output.toString().substring(0, output.length() - 1));
 	return;
 }
